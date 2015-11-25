@@ -61,11 +61,11 @@
       <div class="col-md-6">
         <my-article label="Naccepted" value="{{ctrl.rtmp.naccepted._text}}" ></my-article>
 
-        <my-article label="Bw in" value="{{ctrl.rtmp.bw_in._text}}" ></my-article>
+        <my-article label="BW in" value="{{ctrl.rtmp.bw_in._text}}" ></my-article>
 
         <my-article label="Bytes in" value="{{ctrl.rtmp.bytes_in._text}}" ></my-article>
 
-        <my-article label="Bw out" value="{{ctrl.rtmp.bw_out._text}}" ></my-article>
+        <my-article label="BW out" value="{{ctrl.rtmp.bw_out._text}}" ></my-article>
 
         <my-article label="Bytes out" value="{{ctrl.rtmp.bytes_out._text}}" ></my-article>
 
@@ -82,27 +82,25 @@
         <div class="col-md-6">
           <my-article label="Time" value="{{stream.time._text}}" ></my-article>
 
-          <my-article label="Time" value="{{stream.time._text}}" ></my-article>
+          <my-article label="BW in" value="{{stream.bw_in._text}}" ></my-article>
 
-          <my-article label="bw_in" value="{{stream.bw_in._text}}" ></my-article>
+          <my-article label="Bytes in" value="{{stream.bytes_in._text}}" ></my-article>
 
-          <my-article label="bytes_in" value="{{stream.bytes_in._text}}" ></my-article>
+          <my-article label="BW out" value="{{stream.bw_out._text}}" ></my-article>
 
-          <my-article label="bw_out" value="{{stream.bw_out._text}}" ></my-article>
-
-          <my-article label="bytes_out" value="{{stream.bytes_out._text}}" ></my-article>
+          <my-article label="Bytes out" value="{{stream.bytes_out._text}}" ></my-article>
         </div>
 
         <div class="col-md-6">
-          <my-article label="bw_audio" value="{{stream.bw_audio._text}}" ></my-article>
+          <my-article label="BW Audio" value="{{stream.bw_audio._text}}" ></my-article>
 
-          <my-article label="bw_video" value="{{stream.bw_video._text}}" ></my-article>
+          <my-article label="BW Video" value="{{stream.bw_video._text}}" ></my-article>
 
-          <my-article label="nclients" value="{{stream.nclients._text}}" ></my-article>
+          <my-article label="N clients" value="{{stream.nclients._text}}" ></my-article>
 
-          <my-article label="publishing" value="{{stream.publishing._text}}" ></my-article>
+          <my-article label="Publishing" value="{{stream.publishing._text}}" ></my-article>
 
-          <my-article label="active" value="{{stream.active._text}}" ></my-article>
+          <my-article label="Active" value="{{stream.active._text}}" ></my-article>
         </div>
       </section>
 
@@ -114,25 +112,23 @@
 
           <div class="col-md-12">
             <div class="col-md-6">
-              <my-article label="address" value="{{client.address._text}}" ></my-article>
+              <my-article label="Address" value="{{client.address._text}}" ></my-article>
 
-              <my-article label="time" value="{{client.time._text}}" ></my-article>
+              <my-article label="Time" value="{{client.time._text}}" ></my-article>
 
-              <my-article label="time" value="{{client.time._text}}" ></my-article>
+              <my-article label="Flashver" value="{{client.flashver._text}}" ></my-article>
 
-              <my-article label="flashver" value="{{client.flashver._text}}" ></my-article>
-
-              <my-article label="dropped" value="{{client.dropped._text}}" ></my-article>
+              <my-article label="Dropped" value="{{client.dropped._text}}" ></my-article>
             </div>
 
             <div class="col-md-6">
-              <my-article label="avsync" value="{{client.avsync._text}}" ></my-article>
+              <my-article label="Avsync" value="{{client.avsync._text}}" ></my-article>
 
-              <my-article label="timestamp" value="{{client.timestamp._text}}" ></my-article>
+              <my-article label="Timestamp" value="{{client.timestamp._text}}" ></my-article>
 
-              <my-article label="publishing" value="{{client.publishing._text}}" ></my-article>
+              <my-article label="Publishing" value="{{client.publishing._text}}" ></my-article>
 
-              <my-article label="active" value="{{client.active._text}}" ></my-article>
+              <my-article label="Active" value="{{client.active._text}}" ></my-article>
             </div>
           </div>
         </article>
@@ -150,21 +146,21 @@
 
           <div class="col-md-12">
             <div class="col-md-6">
-              <my-article label="width" value="{{stream.meta.video.width._text}}" ></my-article>
+              <my-article label="Width" value="{{stream.meta.video.width._text}}" ></my-article>
 
-              <my-article label="height" value="{{stream.meta.video.height._text}}" ></my-article>
+              <my-article label="Height" value="{{stream.meta.video.height._text}}" ></my-article>
 
-              <my-article label="frame_rate" value="{{stream.meta.video.frame_rate._text}}" ></my-article>
+              <my-article label="Frame rate" value="{{stream.meta.video.frame_rate._text}}" ></my-article>
 
-              <my-article label="codec" value="{{stream.meta.video.codec._text}}" ></my-article>
+              <my-article label="Codec" value="{{stream.meta.video.codec._text}}" ></my-article>
             </div>
 
             <div class="col-md-6">
-              <my-article label="profile" value="{{stream.meta.video.profile._text}}" ></my-article>
+              <my-article label="Profile" value="{{stream.meta.video.profile._text}}" ></my-article>
 
-              <my-article label="compat" value="{{stream.meta.video.compat._text}}" ></my-article>
+              <my-article label="Compat" value="{{stream.meta.video.compat._text}}" ></my-article>
 
-              <my-article label="level" value="{{stream.meta.video.level._text}}" ></my-article>
+              <my-article label="Level" value="{{stream.meta.video.level._text}}" ></my-article>
             </div>
           </div>
         </article>
@@ -175,7 +171,7 @@
           </header>
 
           <div class="col-md-12">
-            <my-article label="codec" value="{{stream.meta.audio.codec._text}}" ></my-article>
+            <my-article label="Codec" value="{{stream.meta.audio.codec._text}}" ></my-article>
           </div>
         </article>
 
