@@ -1,6 +1,6 @@
 # Nginx RTMP Statistics
 
-RTMP Statistics is a monitoring panel based on xml rtmp stat.
+RTMP Statistics is a monitoring panel based on [xml rtmp stat](https://github.com/arut/nginx-rtmp-module/wiki/Directives#statistics).
 
 ![Example](https://github.com/danielrohers/nginx-rtmp-statistics/blob/master/assets/img/example.png)
 
