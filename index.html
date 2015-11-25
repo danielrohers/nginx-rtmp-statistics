@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Nginx RTMP Statistics</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+</head>
+<body>
+
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">Nginx RTMP Statistics</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" ng-controller="RtmpController as ctrl">
+
+    <section id="form" class="col-md-12">
+
+      <form ng-submit="ctrl.submit()" class="form-inline">
+        <div class="form-group">
+          <input type="text" class="form-control" size="50" ng-model="ctrl.endpoint" placeholder="server endpoint">
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="form-control" ng-model="ctrl.time" placeholder="time reload (ms)">
+        </div>
+
+        <button type="submit" class="btn btn-primary">submit</button>
+        <button type="button" class="btn btn-default" ng-click="ctrl.stop()">stop</button>
+      </form>
+
+    </section>
+
+    <section id="rtmp" class="col-md-12">
+      <header class="page-header">
+        <h3>RTMP</h3>
+      </header>
+
+      <div class="col-md-6">
+        <my-article label="Nginx version" value="{{ctrl.rtmp.nginx_version._text}}" ></my-article>
+
+        <my-article label="Nginx rtmp version" value="{{ctrl.rtmp.nginx_rtmp_version._text}}" ></my-article>
+
+        <my-article label="Compiler" value="{{ctrl.rtmp.compiler._text}}" ></my-article>
+
+        <my-article label="Built" value="{{ctrl.rtmp.built._text}}" ></my-article>
+
+        <my-article label="Pid" value="{{ctrl.rtmp.pid._text}}" ></my-article>
+
+        <my-article label="Uptime" value="{{ctrl.rtmp.uptime._text}}" ></my-article>
+      </div>
+
+      <div class="col-md-6">
+        <my-article label="Naccepted" value="{{ctrl.rtmp.naccepted._text}}" ></my-article>
+
+        <my-article label="Bw in" value="{{ctrl.rtmp.bw_in._text}}" ></my-article>
+
+        <my-article label="Bytes in" value="{{ctrl.rtmp.bytes_in._text}}" ></my-article>
+
+        <my-article label="Bw out" value="{{ctrl.rtmp.bw_out._text}}" ></my-article>
+
+        <my-article label="Bytes out" value="{{ctrl.rtmp.bytes_out._text}}" ></my-article>
+
+        <my-article label="N clients" value="{{ctrl.rtmp.server.application.live.nclients._text}}" ></my-article>
+      </div>
+    </section>
+
+    <section class="col-md-12 container" ng-repeat="stream in ctrl.rtmp.server.application.live.stream">
+      <header class="page-header">
+        <h3>Stream {{ stream.name._text }}</h3>
+      </header>
+
+      <section class="stream col-md-12">
+        <div class="col-md-6">
+          <my-article label="Time" value="{{stream.time._text}}" ></my-article>
+
+          <my-article label="Time" value="{{stream.time._text}}" ></my-article>
+
+          <my-article label="bw_in" value="{{stream.bw_in._text}}" ></my-article>
+
+          <my-article label="bytes_in" value="{{stream.bytes_in._text}}" ></my-article>
+
+          <my-article label="bw_out" value="{{stream.bw_out._text}}" ></my-article>
+
+          <my-article label="bytes_out" value="{{stream.bytes_out._text}}" ></my-article>
+        </div>
+
+        <div class="col-md-6">
+          <my-article label="bw_audio" value="{{stream.bw_audio._text}}" ></my-article>
+
+          <my-article label="bw_video" value="{{stream.bw_video._text}}" ></my-article>
+
+          <my-article label="nclients" value="{{stream.nclients._text}}" ></my-article>
+
+          <my-article label="publishing" value="{{stream.publishing._text}}" ></my-article>
+
+          <my-article label="active" value="{{stream.active._text}}" ></my-article>
+        </div>
+      </section>
+
+      <section class="client container col-md-12" ng-repeat="client in stream.client">
+        <article class="clients">
+          <header class="page-header">
+            <h4>Client {{ client.id._text }}</h4>
+          </header>
+
+          <div class="col-md-12">
+            <div class="col-md-6">
+              <my-article label="address" value="{{client.address._text}}" ></my-article>
+
+              <my-article label="time" value="{{client.time._text}}" ></my-article>
+
+              <my-article label="time" value="{{client.time._text}}" ></my-article>
+
+              <my-article label="flashver" value="{{client.flashver._text}}" ></my-article>
+
+              <my-article label="dropped" value="{{client.dropped._text}}" ></my-article>
+            </div>
+
+            <div class="col-md-6">
+              <my-article label="avsync" value="{{client.avsync._text}}" ></my-article>
+
+              <my-article label="timestamp" value="{{client.timestamp._text}}" ></my-article>
+
+              <my-article label="publishing" value="{{client.publishing._text}}" ></my-article>
+
+              <my-article label="active" value="{{client.active._text}}" ></my-article>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="meta container col-md-12">
+        <header class="page-header">
+          <h3>Meta</h3>
+        </header>
+
+        <article class="container col-md-12">
+          <header class="page-header">
+            <h4>Video</h4>
+          </header>
+
+          <div class="col-md-12">
+            <div class="col-md-6">
+              <my-article label="width" value="{{stream.meta.video.width._text}}" ></my-article>
+
+              <my-article label="height" value="{{stream.meta.video.height._text}}" ></my-article>
+
+              <my-article label="frame_rate" value="{{stream.meta.video.frame_rate._text}}" ></my-article>
+
+              <my-article label="codec" value="{{stream.meta.video.codec._text}}" ></my-article>
+            </div>
+
+            <div class="col-md-6">
+              <my-article label="profile" value="{{stream.meta.video.profile._text}}" ></my-article>
+
+              <my-article label="compat" value="{{stream.meta.video.compat._text}}" ></my-article>
+
+              <my-article label="level" value="{{stream.meta.video.level._text}}" ></my-article>
+            </div>
+          </div>
+        </article>
+
+        <article class="col-md-12">
+          <header class="page-header">
+            <h4>Audio</h4>
+          </header>
+
+          <div class="col-md-12">
+            <my-article label="codec" value="{{stream.meta.audio.codec._text}}" ></my-article>
+          </div>
+        </article>
+
+      </section>
+    </section>
+
+  </main>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+  <script src="/assets/js/jxon.js"></script>
+  <script src="/assets/js/controller.js"></script>
+</body>
+</html>
