@@ -1,6 +1,6 @@
 # Nginx RTMP Statistics
 
-This is a simple admin panel, based on xml rtmp stat.
+RTMP Statistics is a monitoring panel based on xml rtmp stat.
 
 ![Example](https://github.com/danielrohers/nginx-rtmp-statistics/blob/master/assets/img/example.png)
 
