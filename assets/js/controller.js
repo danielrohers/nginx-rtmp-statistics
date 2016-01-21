@@ -9,9 +9,9 @@
 
       $scope.interval = null;
 
-      $scope.endpoint = 'http://127.0.0.1/stat'
+      $scope.endpoint = 'http://stream-1.handson.tv/stat' || 'http://127.0.0.1/stat'
 
-      $scope.time = 100;
+      $scope.time = 1000;
 
       $scope.submit = function() {
         $scope.stop();
@@ -35,6 +35,16 @@
             });
 
             $scope.rtmp = rtmp;
+
+            var timeout = setTimeout(function () {
+              rtmp.server.application.live.stream.forEach(function (stream) {
+                var timestamp = stream.time._text;
+                var clients = stream.client;
+                ChartClientLength.init('#chart-client-length-' + stream.name._text, timestamp, clients.length);
+                ChartClientFlashver.init('#chart-client-flashver-' + stream.name._text, timestamp, clients);
+              });
+              clearTimeout(timeout);
+            }, 50);
           });
 
           res.error(function(data, status, headers, config) {
