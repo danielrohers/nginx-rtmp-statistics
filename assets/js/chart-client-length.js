@@ -5,7 +5,7 @@
   var ChartClientLength = (function () {
 
     var data = [{
-      key: 'Client length',
+      key: 'Clients',
       values: []
     }];
 
@@ -44,7 +44,7 @@
               .tickFormat(d3.format(',r'));
 
             chart.yAxis
-              .axisLabel('Client length')
+              .axisLabel('Length')
               .tickFormat(d3.format('d'));
 
             _populate(bindto, data);

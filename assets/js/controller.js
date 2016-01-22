@@ -9,7 +9,7 @@
 
       $scope.interval = null;
 
-      $scope.endpoint = 'http://stream-1.handson.tv/stat' || 'http://127.0.0.1/stat'
+      $scope.endpoint = 'http://127.0.0.1/stat'
 
       $scope.time = 1000;
 
@@ -36,12 +36,20 @@
 
             $scope.rtmp = rtmp;
 
+            ChartRtmpBits.init('#chart-rtmp-bits', rtmp.uptime._text, rtmp.bw_in._text, rtmp.bw_out._text);
+            ChartRtmpBytes.init('#chart-rtmp-bytes', rtmp.uptime._text, rtmp.bytes_in._text, rtmp.bytes_out._text);
+
             var timeout = setTimeout(function () {
               rtmp.server.application.live.stream.forEach(function (stream) {
+                var streamName = stream.name._text;
                 var timestamp = stream.time._text;
                 var clients = stream.client;
-                ChartClientLength.init('#chart-client-length-' + stream.name._text, timestamp, clients.length);
-                ChartClientFlashver.init('#chart-client-flashver-' + stream.name._text, timestamp, clients);
+
+                ChartStreamBits.init('#chart-stream-bits-' + streamName, timestamp, stream.bw_in._text, stream.bw_out._text);
+                ChartStreamBytes.init('#chart-stream-bytes-' + streamName, timestamp, stream.bytes_in._text, stream.bytes_out._text);
+
+                ChartClientLength.init('#chart-client-length-' + streamName, timestamp, clients.length);
+                ChartClientFlashver.init('#chart-client-flashver-' + streamName, timestamp, clients);
               });
               clearTimeout(timeout);
             }, 50);
