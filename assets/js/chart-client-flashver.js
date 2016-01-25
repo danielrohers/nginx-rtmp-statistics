@@ -19,7 +19,7 @@
       init : function (bindto, timestamp, clients) {
         var values = {};
         clients.forEach(function (client) {
-          var flashver = client.flashver._text;
+          var flashver = client.flashver;
           if (!values[flashver]) {
             values[flashver] = 1;
           } else {

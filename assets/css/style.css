@@ -1,0 +1,12 @@
+#form input,
+#form button {
+  margin-right: 20px;
+}
+
+#form input[type="text"] {
+  width: 30em;
+}
+
+#form input[type="number"] {
+  width: 10em; 
+}
