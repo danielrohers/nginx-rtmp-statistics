@@ -16,8 +16,9 @@ var Form = React.createClass({
 
   get : function () {
     var that = this;
+    var endpoint = that.state.endpoint;
     $.ajax({
-      url: that.state.endpoint,
+      url: endpoint,
       cache: false,
       success: function (data) {
         JXON.config({ autoDate: false });
@@ -72,8 +73,9 @@ var Form = React.createClass({
   submit : function (e) {
     e.preventDefault();
     var that = this;
+    that.setState({ endpoint: e.target.endpoint.value });
     that.get();
-    that.interval = setInterval(that.get, that.state.time);
+    that.interval = setInterval(that.get, e.target.endpoint.value);
   },
 
   stop : function () {
@@ -83,9 +85,9 @@ var Form = React.createClass({
   render : function () {
     return (
       <form onSubmit={this.submit} className="form-inline">
-        <Input value={this.state.endpoint} placeholder="server endpoint" />
+        <Input value={this.state.endpoint} name="endpoint" placeholder="server endpoint" />
 
-        <Input type="number" value={this.state.time} placeholder="time reload (ms)" />
+        <Input type="number" value="1000" name="time" placeholder="time reload (ms)" />
 
         <button type="submit" className="btn btn-primary">start</button>
         <button type="button" className="btn btn-default" onClick={this.stop}>stop</button>

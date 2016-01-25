@@ -18213,8 +18213,9 @@
 
 	  get: function get() {
 	    var that = this;
+	    var endpoint = that.state.endpoint;
 	    $.ajax({
-	      url: that.state.endpoint,
+	      url: endpoint,
 	      cache: false,
 	      success: function success(data) {
 	        JXON.config({ autoDate: false });
@@ -18263,8 +18264,9 @@
 	  submit: function submit(e) {
 	    e.preventDefault();
 	    var that = this;
+	    that.setState({ endpoint: e.target.endpoint.value });
 	    that.get();
-	    that.interval = setInterval(that.get, that.state.time);
+	    that.interval = setInterval(that.get, e.target.endpoint.value);
 	  },
 
 	  stop: function stop() {
@@ -18275,8 +18277,8 @@
 	    return React.createElement(
 	      'form',
 	      { onSubmit: this.submit, className: 'form-inline' },
-	      React.createElement(Input, { value: this.state.endpoint, placeholder: 'server endpoint' }),
-	      React.createElement(Input, { type: 'number', value: this.state.time, placeholder: 'time reload (ms)' }),
+	      React.createElement(Input, { value: this.state.endpoint, name: 'endpoint', placeholder: 'server endpoint' }),
+	      React.createElement(Input, { type: 'number', value: '1000', name: 'time', placeholder: 'time reload (ms)' }),
 	      React.createElement(
 	        'button',
 	        { type: 'submit', className: 'btn btn-primary' },
@@ -18309,7 +18311,7 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'form-group' },
-	      React.createElement('input', { type: this.props.type || 'text', className: 'form-control', value: this.props.value, placeholder: this.props.placeholder, required: true })
+	      React.createElement('input', { type: this.props.type || 'text', name: this.props.name, className: 'form-control', defaultValue: this.props.value, placeholder: this.props.placeholder, required: true })
 	    );
 	  }
 
