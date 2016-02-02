@@ -47,9 +47,59 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Form = __webpack_require__(157);
 
-	React.render(React.createElement(Form, null), document.getElementById('form'));
+	var Nav = __webpack_require__(168);
+	var Form = __webpack_require__(157);
+	var Rtmp = __webpack_require__(159);
+	var StreamList = __webpack_require__(162);
+	var Chart = __webpack_require__(164);
+
+	var Application = React.createClass({
+	  displayName: 'Application',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      rtmp: {},
+	      streamList: []
+	    };
+	  },
+
+	  handleSubmit: function handleSubmit(data) {
+	    this.setState(data);
+	  },
+
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Nav, null),
+	      React.createElement(
+	        'main',
+	        { className: 'container' },
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-12' },
+	          React.createElement(Form, { handleSubmit: this.handleSubmit })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-12' },
+	          React.createElement(Rtmp, { rtmp: this.state.rtmp })
+	        ),
+	        React.createElement(Chart, { id: 'chart-rtmp-bits' }),
+	        React.createElement(Chart, { id: 'chart-rtmp-bytes' }),
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-12 container' },
+	          React.createElement(StreamList, { streamList: this.state.streamList })
+	        )
+	      )
+	    );
+	  }
+
+	});
+
+	React.render(React.createElement(Application, null), document.getElementById('application'));
 
 /***/ },
 /* 1 */
@@ -18204,57 +18254,77 @@
 	var Form = React.createClass({
 	  displayName: 'Form',
 
-	  submit: function submit(e) {
+	  getInitialState: function getInitialState() {
+	    return {
+	      endpoint: 'http://127.0.0.1/stat',
+	      time: 1000
+	    };
+	  },
+
+	  handleEndpointChange: function handleEndpointChange(e) {
+	    this.setState({ endpoint: e.target.value });
+	  },
+
+	  handleTimeChange: function handleTimeChange(e) {
+	    this.setState({ time: e.target.value });
+	  },
+
+	  handleChartChange: function handleChartChange(rtmp, streamList) {
+	    ChartRtmpBits.init('#chart-rtmp-bits', rtmp.uptime, rtmp.bw_in, rtmp.bw_out);
+	    ChartRtmpBytes.init('#chart-rtmp-bytes', rtmp.uptime, rtmp.bytes_in, rtmp.bytes_out);
+
+	    streamList.forEach(function (stream) {
+	      var streamName = stream.name;
+	      var timestamp = stream.time;
+	      var clients = stream.client;
+
+	      ChartStreamBits.init('#chart-stream-bits-' + streamName, timestamp, stream.bw_in, stream.bw_out);
+	      ChartStreamBytes.init('#chart-stream-bytes-' + streamName, timestamp, stream.bytes_in, stream.bytes_out);
+
+	      ChartClientLength.init('#chart-client-length-' + streamName, timestamp, clients.length);
+	      ChartClientFlashver.init('#chart-client-flashver-' + streamName, timestamp, clients);
+	    });
+	  },
+
+	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
-	    var that = this;
-	    var endpoint = e.target.endpoint.value;
-	    that.interval = setInterval(function () {
+	    var self = this;
+
+	    self.interval = setInterval(function () {
 	      $.ajax({
-	        url: endpoint,
+	        url: self.state.endpoint,
 	        cache: false,
 	        success: function success(data) {
 	          JXON.config({ autoDate: false });
 	          var jxon = JXON.build(data);
 	          var rtmp = jxon.rtmp;
 	          if (!rtmp) {
-	            return that.stop();
+	            return self.stop();
 	          }
 
-	          if (!Array.isArray(rtmp.server.application.live.stream)) {
-	            rtmp.server.application.live.stream = [rtmp.server.application.live.stream];
+	          var streamList = rtmp.server.application.live.stream;
+
+	          if (!Array.isArray(streamList)) {
+	            streamList = [streamList];
 	          }
 
-	          rtmp.server.application.live.stream.forEach(function (stream) {
+	          streamList.forEach(function (stream) {
 	            if (!Array.isArray(stream.client)) {
 	              stream.client = [stream.client];
 	            }
 	          });
 
-	          React.render(React.createElement(Rtmp, { rtmp: rtmp }), document.getElementById('rtmp'));
+	          rtmp.nclients = rtmp.server.application.live.nclients;
 
-	          React.render(React.createElement(StreamList, { data: rtmp.server.application.live.stream }), document.getElementById('stream'));
-
-	          ChartRtmpBits.init('#chart-rtmp-bits', rtmp.uptime, rtmp.bw_in, rtmp.bw_out);
-	          ChartRtmpBytes.init('#chart-rtmp-bytes', rtmp.uptime, rtmp.bytes_in, rtmp.bytes_out);
-
-	          rtmp.server.application.live.stream.forEach(function (stream) {
-	            var streamName = stream.name;
-	            var timestamp = stream.time;
-	            var clients = stream.client;
-
-	            ChartStreamBits.init('#chart-stream-bits-' + streamName, timestamp, stream.bw_in, stream.bw_out);
-	            ChartStreamBytes.init('#chart-stream-bytes-' + streamName, timestamp, stream.bytes_in, stream.bytes_out);
-
-	            ChartClientLength.init('#chart-client-length-' + streamName, timestamp, clients.length);
-	            ChartClientFlashver.init('#chart-client-flashver-' + streamName, timestamp, clients);
-	          });
+	          self.props.handleSubmit({ rtmp: rtmp, streamList: streamList });
+	          self.handleChartChange(rtmp, streamList);
 	        },
 	        error: function error(xhr, status, err) {
-	          that.stop();
+	          self.stop();
 	          alert('It could not connect to the server');
 	        }
 	      });
-	    }, e.target.time.value);
+	    }, self.state.time);
 	  },
 
 	  stop: function stop() {
@@ -18264,9 +18334,9 @@
 	  render: function render() {
 	    return React.createElement(
 	      'form',
-	      { onSubmit: this.submit, className: 'form-inline' },
-	      React.createElement(Input, { value: 'http://127.0.0.1/stat', name: 'endpoint', placeholder: 'server endpoint' }),
-	      React.createElement(Input, { type: 'number', value: '1000', name: 'time', placeholder: 'time reload (ms)' }),
+	      { onSubmit: this.handleSubmit, className: 'form-inline' },
+	      React.createElement(Input, { value: this.state.endpoint, onChange: this.handleEndpointChange, name: 'endpoint', placeholder: 'server endpoint' }),
+	      React.createElement(Input, { type: 'number', value: this.state.time, onChange: this.handleTimeChange, name: 'time', placeholder: 'time reload (ms)' }),
 	      React.createElement(
 	        'button',
 	        { type: 'submit', className: 'btn btn-primary' },
@@ -18299,7 +18369,7 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'form-group' },
-	      React.createElement('input', { type: this.props.type || 'text', name: this.props.name, className: 'form-control', defaultValue: this.props.value, placeholder: this.props.placeholder, required: true })
+	      React.createElement('input', { type: this.props.type || 'text', name: this.props.name, className: 'form-control', onChange: this.props.onChange, defaultValue: this.props.value, placeholder: this.props.placeholder, required: true })
 	    );
 	  }
 
@@ -18351,7 +18421,7 @@
 	        React.createElement(Article, { label: 'Bytes in', value: this.props.rtmp.bytes_in }),
 	        React.createElement(Article, { label: 'BW out', value: this.props.rtmp.bw_out }),
 	        React.createElement(Article, { label: 'Bytes out', value: this.props.rtmp.bytes_out }),
-	        React.createElement(Article, { label: 'N clients', value: this.props.rtmp.server.application.live.nclients })
+	        React.createElement(Article, { label: 'N clients', value: this.props.rtmp.nclients })
 	      )
 	    );
 	  }
@@ -18434,7 +18504,7 @@
 	  displayName: 'StreamList',
 
 	  render: function render() {
-	    var streamList = this.props.data.map(function (stream) {
+	    var streamList = this.props.streamList.map(function (stream) {
 	      return React.createElement(Stream, { stream: stream });
 	    });
 	    return React.createElement(
@@ -18640,6 +18710,41 @@
 	});
 
 	module.exports = Audio;
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var Nav = React.createClass({
+	  displayName: 'Nav',
+
+	  render: function render() {
+	    return React.createElement(
+	      'nav',
+	      { className: 'navbar navbar-default' },
+	      React.createElement(
+	        'div',
+	        { className: 'container-fluid' },
+	        React.createElement(
+	          'div',
+	          { className: 'navbar-header' },
+	          React.createElement(
+	            'a',
+	            { className: 'navbar-brand', href: '/' },
+	            'Nginx RTMP Statistics'
+	          )
+	        )
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = Nav;
 
 /***/ }
 /******/ ]);

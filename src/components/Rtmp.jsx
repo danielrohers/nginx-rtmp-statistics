@@ -32,7 +32,7 @@ var Rtmp = React.createClass({
           <Article label="Bytes in" value={ this.props.rtmp.bytes_in} />
           <Article label="BW out" value={ this.props.rtmp.bw_out} />
           <Article label="Bytes out" value={ this.props.rtmp.bytes_out} />
-          <Article label="N clients" value={ this.props.rtmp.server.application.live.nclients} />
+          <Article label="N clients" value={ this.props.rtmp.nclients} />
         </div>
       </div>
     );

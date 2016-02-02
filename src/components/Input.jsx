@@ -5,7 +5,7 @@ var Input = React.createClass({
   render : function () {
     return (
       <div className="form-group">
-        <input type={this.props.type || 'text'} name={this.props.name} className="form-control" defaultValue={this.props.value} placeholder={this.props.placeholder} required />
+        <input type={this.props.type || 'text'} name={this.props.name} className="form-control" onChange={this.props.onChange} defaultValue={this.props.value} placeholder={this.props.placeholder} required />
       </div>
     );
   }

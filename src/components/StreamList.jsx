@@ -5,7 +5,7 @@ var Stream = require('./Stream.jsx');
 var StreamList = React.createClass({
 
   render : function () {
-    var streamList = this.props.data.map(function (stream) {
+    var streamList = this.props.streamList.map(function (stream) {
       return (
         <Stream stream={stream} />
       );
