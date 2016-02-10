@@ -9,7 +9,7 @@ var Form = React.createClass({
 
   getInitialState : function () {
     return {
-      endpoint: 'http://127.0.0.1/stat',
+      endpoint: window.location.origin + '/stat',
       time: 1000
     };
   },
