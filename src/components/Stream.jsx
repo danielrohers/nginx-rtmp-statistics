@@ -18,23 +18,19 @@ var Stream = React.createClass({
 
             <Article label="BW in" value={ this.props.stream.bw_in } />
 
-            <Article label="Bytes in" value={ this.props.stream.bytes_in } />
-
             <Article label="BW out" value={ this.props.stream.bw_out } />
 
-            <Article label="Bytes out" value={ this.props.stream.bytes_out } />
+            <Article label="BW Audio" value={ this.props.stream.bw_audio } />
           </div>
 
           <div className="col-md-6">
-            <Article label="BW Audio" value={ this.props.stream.bw_audio } />
-
-            <Article label="BW Video" value={ this.props.stream.bw_video } />
-
             <Article label="N clients" value={ this.props.stream.nclients } />
 
-            <Article label="Publishing" value={ this.props.stream.publishing } />
+            <Article label="Bytes in" value={ this.props.stream.bytes_in } />
 
-            <Article label="Active" value={ this.props.stream.active } />
+            <Article label="Bytes out" value={ this.props.stream.bytes_out } />
+
+            <Article label="BW Video" value={ this.props.stream.bw_video } />
           </div>
         </section>
 

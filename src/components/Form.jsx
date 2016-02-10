@@ -50,12 +50,18 @@ var Form = React.createClass({
         success: function (data) {
           JXON.config({ autoDate: false });
           var jxon = JXON.build(data);
+          
           var rtmp = jxon.rtmp;
+          
           if (!rtmp) {
-            return self.stop();
+            self.props.handleError('Error to make XML parser');
+            self.stop();
+            return;
           }
 
           var streamList = rtmp.server.application.live.stream;
+
+          if (!streamList) { streamList = []; }
 
           if (!Array.isArray(streamList)) {
             streamList = [streamList];
