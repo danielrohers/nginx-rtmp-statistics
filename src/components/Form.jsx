@@ -74,7 +74,7 @@ var Form = React.createClass({
         },
         error: function (xhr, status, err) {
           self.stop();
-          alert('It could not connect to the server');
+          self.props.handleError('It could not connect to the server.');
         }
       });
     }, self.state.time);

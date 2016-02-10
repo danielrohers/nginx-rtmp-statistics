@@ -10,7 +10,7 @@ var Stream = React.createClass({
   render : function () {
     return (
       <div>
-        <Header name={'Stream' + this.props.stream.name } />
+        <Header name={'Stream ' + this.props.stream.name } />
 
         <section className="stream col-md-12">
           <div className="col-md-6">
