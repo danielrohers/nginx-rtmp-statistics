@@ -20,9 +20,15 @@
     var chart;
 
     var _populate = function (bindto) {
-      d3.select(bindto)
-        .datum(data)
-        .call(chart);
+      var svg = d3.select(bindto)
+                  .datum(data)
+                  .call(chart);
+
+      svg.append("text")
+        .attr("x", '50%' )
+        .attr("y", 15)
+        .style("text-anchor", "middle")
+        .text("Bandwidth");
     }
 
     return {
