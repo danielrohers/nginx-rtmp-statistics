@@ -34,8 +34,8 @@ var Rtmp = React.createClass({
 
         <div className="col-md-6">
           <Article label="Naccepted" value={ this.props.rtmp.naccepted } />
-          <Article label="Bandwidth (bits) in" value={ this.props.rtmp.bw_in } />
-          <Article label="Bandwidth (bits) out" value={ this.props.rtmp.bw_out } />
+          <Article label="Bandwidth in" value={ this.props.rtmp.bw_in } />
+          <Article label="Bandwidth out" value={ this.props.rtmp.bw_out } />
           <Article label="Bytes in" value={ this.props.rtmp.bytes_in } />
           <Article label="Bytes out" value={ this.props.rtmp.bytes_out } />
           <Article label="N clients" value={ this.props.rtmp.nclients } />

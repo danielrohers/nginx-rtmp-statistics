@@ -5,6 +5,12 @@ var Article = require('./Article.jsx');
 
 var Audio = React.createClass({
 
+  getDefaultProps: function() {
+    return {
+      audio: {}
+    };
+  },
+
   render : function () {
     return (
       <article className="col-md-12">

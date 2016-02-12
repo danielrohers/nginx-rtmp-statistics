@@ -5,6 +5,13 @@ var Article = require('./Article.jsx');
 
 var Video = React.createClass({
 
+
+  getDefaultProps: function() {
+    return {
+      video: {}
+    };
+  },
+
   render : function () {
     return (
       <article className="container col-md-12">

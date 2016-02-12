@@ -6,6 +6,12 @@ var Audio = require('./Audio.jsx');
 
 var Meta = React.createClass({
 
+  getDefaultProps: function() {
+    return {
+      meta: {}
+    };
+  },
+
   render : function () {
     return (
       <section className="meta container col-md-12">

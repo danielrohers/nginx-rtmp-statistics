@@ -46,8 +46,8 @@
             });
 
             chart.xAxis
-              .axisLabel('Timestamp (ms)')
-              .tickFormat(d3.format(',r'));
+              .axisLabel('Timestamp')
+              .tickFormat(Format.time);
 
             chart.yAxis
               .axisLabel('Bandwidth (bits)')

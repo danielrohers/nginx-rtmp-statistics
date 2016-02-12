@@ -18502,8 +18502,8 @@
 	        'div',
 	        { className: 'col-md-6' },
 	        React.createElement(Article, { label: 'Naccepted', value: this.props.rtmp.naccepted }),
-	        React.createElement(Article, { label: 'Bandwidth (bits) in', value: this.props.rtmp.bw_in }),
-	        React.createElement(Article, { label: 'Bandwidth (bits) out', value: this.props.rtmp.bw_out }),
+	        React.createElement(Article, { label: 'Bandwidth in', value: this.props.rtmp.bw_in }),
+	        React.createElement(Article, { label: 'Bandwidth out', value: this.props.rtmp.bw_out }),
 	        React.createElement(Article, { label: 'Bytes in', value: this.props.rtmp.bytes_in }),
 	        React.createElement(Article, { label: 'Bytes out', value: this.props.rtmp.bytes_out }),
 	        React.createElement(Article, { label: 'N clients', value: this.props.rtmp.nclients })
@@ -18620,6 +18620,9 @@
 	  displayName: 'Stream',
 
 	  render: function render() {
+	    if (this.props.stream.time) {
+	      this.props.stream.time = Math.floor(this.props.stream.time / 1000);
+	    }
 	    return React.createElement(
 	      'div',
 	      null,
@@ -18630,10 +18633,10 @@
 	        React.createElement(
 	          'div',
 	          { className: 'col-md-6' },
-	          React.createElement(Article, { label: 'Time', value: this.props.stream.time }),
-	          React.createElement(Article, { label: 'Bandwidth (bits) in', value: this.props.stream.bw_in }),
-	          React.createElement(Article, { label: 'Bandwidth (bits) out', value: this.props.stream.bw_out }),
-	          React.createElement(Article, { label: 'Bandwidth (bits) Audio', value: this.props.stream.bw_audio })
+	          React.createElement(Article, { label: 'Time', value: Format.time(this.props.stream.time) }),
+	          React.createElement(Article, { label: 'Bandwidth in', value: this.props.stream.bw_in }),
+	          React.createElement(Article, { label: 'Bandwidth out', value: this.props.stream.bw_out }),
+	          React.createElement(Article, { label: 'Bandwidth Audio', value: this.props.stream.bw_audio })
 	        ),
 	        React.createElement(
 	          'div',
@@ -18641,7 +18644,7 @@
 	          React.createElement(Article, { label: 'N clients', value: this.props.stream.nclients }),
 	          React.createElement(Article, { label: 'Bytes in', value: this.props.stream.bytes_in }),
 	          React.createElement(Article, { label: 'Bytes out', value: this.props.stream.bytes_out }),
-	          React.createElement(Article, { label: 'Bandwidth (bits) Video', value: this.props.stream.bw_video })
+	          React.createElement(Article, { label: 'Bandwidth Video', value: this.props.stream.bw_video })
 	        )
 	      ),
 	      React.createElement(
@@ -18693,6 +18696,12 @@
 	var Meta = React.createClass({
 	  displayName: 'Meta',
 
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      meta: {}
+	    };
+	  },
+
 	  render: function render() {
 	    return React.createElement(
 	      'section',
@@ -18720,6 +18729,12 @@
 
 	var Video = React.createClass({
 	  displayName: 'Video',
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      video: {}
+	    };
+	  },
 
 	  render: function render() {
 	    return React.createElement(
@@ -18765,6 +18780,12 @@
 
 	var Audio = React.createClass({
 	  displayName: 'Audio',
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      audio: {}
+	    };
+	  },
 
 	  render: function render() {
 	    return React.createElement(

@@ -57,11 +57,11 @@
             });
 
             chart.xAxis
-              .axisLabel('Timestamp (ms)')
-              .tickFormat(d3.format(',r'));
+              .axisLabel('Timestamp')
+              .tickFormat(Format.time);
 
             chart.yAxis
-              .axisLabel('Flashver length')
+              .axisLabel('Flashver')
               .tickFormat(d3.format('d'));
 
             _populate(bindto, data);
