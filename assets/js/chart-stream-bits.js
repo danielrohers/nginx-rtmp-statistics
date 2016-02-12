@@ -50,7 +50,7 @@
               .tickFormat(d3.format(',r'));
 
             chart.yAxis
-              .axisLabel('Bits')
+              .axisLabel('Bandwidth (bits)')
               .tickFormat(d3.format('d'));
 
             _populate(bindto);

@@ -16,11 +16,11 @@ var Stream = React.createClass({
           <div className="col-md-6">
             <Article label="Time" value={ this.props.stream.time } />
 
-            <Article label="BW in" value={ this.props.stream.bw_in } />
+            <Article label="Bandwidth (bits) in" value={ this.props.stream.bw_in } />
 
-            <Article label="BW out" value={ this.props.stream.bw_out } />
+            <Article label="Bandwidth (bits) out" value={ this.props.stream.bw_out } />
 
-            <Article label="BW Audio" value={ this.props.stream.bw_audio } />
+            <Article label="Bandwidth (bits) Audio" value={ this.props.stream.bw_audio } />
           </div>
 
           <div className="col-md-6">
@@ -30,7 +30,7 @@ var Stream = React.createClass({
 
             <Article label="Bytes out" value={ this.props.stream.bytes_out } />
 
-            <Article label="BW Video" value={ this.props.stream.bw_video } />
+            <Article label="Bandwidth (bits) Video" value={ this.props.stream.bw_video } />
           </div>
         </section>
 
