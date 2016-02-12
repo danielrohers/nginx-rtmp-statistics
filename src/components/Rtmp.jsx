@@ -13,9 +13,6 @@ var Rtmp = React.createClass({
   },
 
   render : function () {
-    if (this.props.rtmp.uptime) {
-      this.props.rtmp.uptime = (this.props.rtmp.uptime / 3600).toFixed(2) // to hour
-    }
     if (this.props.rtmp.bw_in) {
       this.props.rtmp.bw_in = Math.round(this.props.rtmp.bw_in / 60) // to minutes
     }
@@ -32,7 +29,7 @@ var Rtmp = React.createClass({
           <Article label="Compiler" value={ this.props.rtmp.compiler } />
           <Article label="Built" value={ this.props.rtmp.built } />
           <Article label="Pid" value={ this.props.rtmp.pid } />
-          <Article label="Uptime (h)" value={ this.props.rtmp.uptime } />
+          <Article label="Uptime" value={ Format.time(this.props.rtmp.uptime) } />
         </div>
 
         <div className="col-md-6">

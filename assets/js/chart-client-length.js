@@ -44,7 +44,7 @@
               .tickFormat(d3.format(',r'));
 
             chart.yAxis
-              .axisLabel('Length')
+              .axisLabel('Clients')
               .tickFormat(d3.format('d'));
 
             _populate(bindto, data);

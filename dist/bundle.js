@@ -18478,9 +18478,6 @@
 	  },
 
 	  render: function render() {
-	    if (this.props.rtmp.uptime) {
-	      this.props.rtmp.uptime = (this.props.rtmp.uptime / 3600).toFixed(2); // to hour
-	    }
 	    if (this.props.rtmp.bw_in) {
 	      this.props.rtmp.bw_in = Math.round(this.props.rtmp.bw_in / 60); // to minutes
 	    }
@@ -18499,14 +18496,14 @@
 	        React.createElement(Article, { label: 'Compiler', value: this.props.rtmp.compiler }),
 	        React.createElement(Article, { label: 'Built', value: this.props.rtmp.built }),
 	        React.createElement(Article, { label: 'Pid', value: this.props.rtmp.pid }),
-	        React.createElement(Article, { label: 'Uptime (h)', value: this.props.rtmp.uptime })
+	        React.createElement(Article, { label: 'Uptime', value: Format.time(this.props.rtmp.uptime) })
 	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'col-md-6' },
 	        React.createElement(Article, { label: 'Naccepted', value: this.props.rtmp.naccepted }),
-	        React.createElement(Article, { label: 'Bits in', value: this.props.rtmp.bw_in }),
-	        React.createElement(Article, { label: 'Bits out', value: this.props.rtmp.bw_out }),
+	        React.createElement(Article, { label: 'Bandwidth (bits) in', value: this.props.rtmp.bw_in }),
+	        React.createElement(Article, { label: 'Bandwidth (bits) out', value: this.props.rtmp.bw_out }),
 	        React.createElement(Article, { label: 'Bytes in', value: this.props.rtmp.bytes_in }),
 	        React.createElement(Article, { label: 'Bytes out', value: this.props.rtmp.bytes_out }),
 	        React.createElement(Article, { label: 'N clients', value: this.props.rtmp.nclients })
@@ -18634,9 +18631,9 @@
 	          'div',
 	          { className: 'col-md-6' },
 	          React.createElement(Article, { label: 'Time', value: this.props.stream.time }),
-	          React.createElement(Article, { label: 'BW in', value: this.props.stream.bw_in }),
-	          React.createElement(Article, { label: 'BW out', value: this.props.stream.bw_out }),
-	          React.createElement(Article, { label: 'BW Audio', value: this.props.stream.bw_audio })
+	          React.createElement(Article, { label: 'Bandwidth (bits) in', value: this.props.stream.bw_in }),
+	          React.createElement(Article, { label: 'Bandwidth (bits) out', value: this.props.stream.bw_out }),
+	          React.createElement(Article, { label: 'Bandwidth (bits) Audio', value: this.props.stream.bw_audio })
 	        ),
 	        React.createElement(
 	          'div',
@@ -18644,7 +18641,7 @@
 	          React.createElement(Article, { label: 'N clients', value: this.props.stream.nclients }),
 	          React.createElement(Article, { label: 'Bytes in', value: this.props.stream.bytes_in }),
 	          React.createElement(Article, { label: 'Bytes out', value: this.props.stream.bytes_out }),
-	          React.createElement(Article, { label: 'BW Video', value: this.props.stream.bw_video })
+	          React.createElement(Article, { label: 'Bandwidth (bits) Video', value: this.props.stream.bw_video })
 	        )
 	      ),
 	      React.createElement(

@@ -46,8 +46,8 @@
             });
 
             chart.xAxis
-              .axisLabel('Uptime (hr)')
-              .tickFormat(d3.format('g'));
+              .axisLabel('Uptime')
+              .tickFormat(Format.time);
 
             chart.yAxis
               .axisLabel('Bandwidth (bits)')
