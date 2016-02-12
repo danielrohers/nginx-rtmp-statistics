@@ -24,7 +24,6 @@ var Form = React.createClass({
 
   handleChartChange : function (rtmp, streamList) {
     ChartRtmpBits.init('#chart-rtmp-bits', rtmp.uptime, rtmp.bw_in, rtmp.bw_out);
-    ChartRtmpBytes.init('#chart-rtmp-bytes', rtmp.uptime, rtmp.bytes_in, rtmp.bytes_out);
 
     streamList.forEach(function (stream) {
       var streamName = stream.name;
@@ -32,8 +31,6 @@ var Form = React.createClass({
       var clients = stream.client;
 
       ChartStreamBits.init('#chart-stream-bits-' + streamName, timestamp, stream.bw_in, stream.bw_out);
-      ChartStreamBytes.init('#chart-stream-bytes-' + streamName, timestamp, stream.bytes_in, stream.bytes_out);
-
       ChartClientLength.init('#chart-client-length-' + streamName, timestamp, clients.length);
       ChartClientFlashver.init('#chart-client-flashver-' + streamName, timestamp, clients);
     });

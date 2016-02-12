@@ -45,7 +45,6 @@ var Application = React.createClass({
           </div>
 
           <Chart id="chart-rtmp-bits" />
-          <Chart id="chart-rtmp-bytes" />
 
           <div className="col-md-12 container">
             <StreamList streamList={ this.state.streamList } />

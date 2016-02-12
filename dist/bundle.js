@@ -48,11 +48,12 @@
 
 	var React = __webpack_require__(1);
 
-	var Nav = __webpack_require__(168);
-	var Form = __webpack_require__(157);
-	var Rtmp = __webpack_require__(159);
-	var StreamList = __webpack_require__(162);
-	var Chart = __webpack_require__(164);
+	var Nav = __webpack_require__(157);
+	var Alert = __webpack_require__(158);
+	var Form = __webpack_require__(159);
+	var Rtmp = __webpack_require__(161);
+	var StreamList = __webpack_require__(164);
+	var Chart = __webpack_require__(166);
 
 	var Application = React.createClass({
 	  displayName: 'Application',
@@ -60,12 +61,17 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      rtmp: {},
-	      streamList: []
+	      streamList: [],
+	      error: null
 	    };
 	  },
 
 	  handleSubmit: function handleSubmit(data) {
 	    this.setState(data);
+	  },
+
+	  handleError: function handleError(error) {
+	    this.setState({ error: error });
 	  },
 
 	  render: function render() {
@@ -76,10 +82,11 @@
 	      React.createElement(
 	        'main',
 	        { className: 'container' },
+	        React.createElement(Alert, { data: this.state.error, handleError: this.handleError }),
 	        React.createElement(
 	          'div',
 	          { className: 'col-md-12' },
-	          React.createElement(Form, { handleSubmit: this.handleSubmit })
+	          React.createElement(Form, { handleSubmit: this.handleSubmit, handleError: this.handleError })
 	        ),
 	        React.createElement(
 	          'div',
@@ -87,7 +94,6 @@
 	          React.createElement(Rtmp, { rtmp: this.state.rtmp })
 	        ),
 	        React.createElement(Chart, { id: 'chart-rtmp-bits' }),
-	        React.createElement(Chart, { id: 'chart-rtmp-bytes' }),
 	        React.createElement(
 	          'div',
 	          { className: 'col-md-12 container' },
@@ -18247,16 +18253,84 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Input = __webpack_require__(158);
-	var Rtmp = __webpack_require__(159);
-	var StreamList = __webpack_require__(162);
+
+	var Nav = React.createClass({
+	  displayName: 'Nav',
+
+	  render: function render() {
+	    return React.createElement(
+	      'nav',
+	      { className: 'navbar navbar-default' },
+	      React.createElement(
+	        'div',
+	        { className: 'container-fluid' },
+	        React.createElement(
+	          'div',
+	          { className: 'navbar-header' },
+	          React.createElement(
+	            'a',
+	            { className: 'navbar-brand', href: '/' },
+	            'Nginx RTMP Statistics'
+	          )
+	        )
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = Nav;
+
+/***/ },
+/* 158 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var Alert = React.createClass({
+	  displayName: 'Alert',
+
+	  render: function render() {
+	    var self = this;
+	    var clazz = '';
+	    if (self.props.data) {
+	      clazz = 'alert alert-danger';
+	      var timeout = setTimeout(function () {
+	        self.props.handleError(null);
+	        clearTimeout(timeout);
+	      }, 5000);
+	    }
+
+	    return React.createElement(
+	      'div',
+	      { className: clazz, role: 'alert' },
+	      self.props.data
+	    );
+	  }
+
+	});
+
+	module.exports = Alert;
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var Input = __webpack_require__(160);
+	var Rtmp = __webpack_require__(161);
+	var StreamList = __webpack_require__(164);
 
 	var Form = React.createClass({
 	  displayName: 'Form',
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      endpoint: 'http://127.0.0.1/stat',
+	      endpoint: window.location.origin + '/stat',
 	      time: 1000
 	    };
 	  },
@@ -18271,7 +18345,6 @@
 
 	  handleChartChange: function handleChartChange(rtmp, streamList) {
 	    ChartRtmpBits.init('#chart-rtmp-bits', rtmp.uptime, rtmp.bw_in, rtmp.bw_out);
-	    ChartRtmpBytes.init('#chart-rtmp-bytes', rtmp.uptime, rtmp.bytes_in, rtmp.bytes_out);
 
 	    streamList.forEach(function (stream) {
 	      var streamName = stream.name;
@@ -18279,8 +18352,6 @@
 	      var clients = stream.client;
 
 	      ChartStreamBits.init('#chart-stream-bits-' + streamName, timestamp, stream.bw_in, stream.bw_out);
-	      ChartStreamBytes.init('#chart-stream-bytes-' + streamName, timestamp, stream.bytes_in, stream.bytes_out);
-
 	      ChartClientLength.init('#chart-client-length-' + streamName, timestamp, clients.length);
 	      ChartClientFlashver.init('#chart-client-flashver-' + streamName, timestamp, clients);
 	    });
@@ -18297,12 +18368,20 @@
 	        success: function success(data) {
 	          JXON.config({ autoDate: false });
 	          var jxon = JXON.build(data);
+
 	          var rtmp = jxon.rtmp;
+
 	          if (!rtmp) {
-	            return self.stop();
+	            self.props.handleError('Error to make XML parser');
+	            self.stop();
+	            return;
 	          }
 
 	          var streamList = rtmp.server.application.live.stream;
+
+	          if (!streamList) {
+	            streamList = [];
+	          }
 
 	          if (!Array.isArray(streamList)) {
 	            streamList = [streamList];
@@ -18321,7 +18400,7 @@
 	        },
 	        error: function error(xhr, status, err) {
 	          self.stop();
-	          alert('It could not connect to the server');
+	          self.props.handleError('It could not connect to the server.');
 	        }
 	      });
 	    }, self.state.time);
@@ -18355,7 +18434,7 @@
 	module.exports = Form;
 
 /***/ },
-/* 158 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18378,15 +18457,15 @@
 	module.exports = Input;
 
 /***/ },
-/* 159 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 
-	var Header = __webpack_require__(160);
-	var Article = __webpack_require__(161);
+	var Header = __webpack_require__(162);
+	var Article = __webpack_require__(163);
 
 	var Rtmp = React.createClass({
 	  displayName: 'Rtmp',
@@ -18399,6 +18478,15 @@
 	  },
 
 	  render: function render() {
+	    if (this.props.rtmp.uptime) {
+	      this.props.rtmp.uptime = (this.props.rtmp.uptime / 3600).toFixed(2); // to hour
+	    }
+	    if (this.props.rtmp.bw_in) {
+	      this.props.rtmp.bw_in = Math.round(this.props.rtmp.bw_in / 60); // to minutes
+	    }
+	    if (this.props.rtmp.bw_out) {
+	      this.props.rtmp.bw_out = Math.round(this.props.rtmp.bw_out / 60); // to minutes
+	    }
 	    return React.createElement(
 	      'div',
 	      null,
@@ -18411,15 +18499,15 @@
 	        React.createElement(Article, { label: 'Compiler', value: this.props.rtmp.compiler }),
 	        React.createElement(Article, { label: 'Built', value: this.props.rtmp.built }),
 	        React.createElement(Article, { label: 'Pid', value: this.props.rtmp.pid }),
-	        React.createElement(Article, { label: 'Uptime', value: this.props.rtmp.uptime })
+	        React.createElement(Article, { label: 'Uptime (h)', value: this.props.rtmp.uptime })
 	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'col-md-6' },
 	        React.createElement(Article, { label: 'Naccepted', value: this.props.rtmp.naccepted }),
-	        React.createElement(Article, { label: 'BW in', value: this.props.rtmp.bw_in }),
+	        React.createElement(Article, { label: 'Bits in', value: this.props.rtmp.bw_in }),
+	        React.createElement(Article, { label: 'Bits out', value: this.props.rtmp.bw_out }),
 	        React.createElement(Article, { label: 'Bytes in', value: this.props.rtmp.bytes_in }),
-	        React.createElement(Article, { label: 'BW out', value: this.props.rtmp.bw_out }),
 	        React.createElement(Article, { label: 'Bytes out', value: this.props.rtmp.bytes_out }),
 	        React.createElement(Article, { label: 'N clients', value: this.props.rtmp.nclients })
 	      )
@@ -18431,7 +18519,7 @@
 	module.exports = Rtmp;
 
 /***/ },
-/* 160 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -18458,7 +18546,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 161 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -18491,14 +18579,14 @@
 	module.exports = RtmpArticle;
 
 /***/ },
-/* 162 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 
-	var Stream = __webpack_require__(163);
+	var Stream = __webpack_require__(165);
 
 	var StreamList = React.createClass({
 	  displayName: 'StreamList',
@@ -18519,17 +18607,17 @@
 	module.exports = StreamList;
 
 /***/ },
-/* 163 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 
-	var Article = __webpack_require__(161);
-	var Header = __webpack_require__(160);
-	var Chart = __webpack_require__(164);
-	var Meta = __webpack_require__(165);
+	var Article = __webpack_require__(163);
+	var Header = __webpack_require__(162);
+	var Chart = __webpack_require__(166);
+	var Meta = __webpack_require__(167);
 
 	var Stream = React.createClass({
 	  displayName: 'Stream',
@@ -18538,7 +18626,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(Header, { name: 'Stream' + this.props.stream.name }),
+	      React.createElement(Header, { name: 'Stream ' + this.props.stream.name }),
 	      React.createElement(
 	        'section',
 	        { className: 'stream col-md-12' },
@@ -18547,25 +18635,22 @@
 	          { className: 'col-md-6' },
 	          React.createElement(Article, { label: 'Time', value: this.props.stream.time }),
 	          React.createElement(Article, { label: 'BW in', value: this.props.stream.bw_in }),
-	          React.createElement(Article, { label: 'Bytes in', value: this.props.stream.bytes_in }),
 	          React.createElement(Article, { label: 'BW out', value: this.props.stream.bw_out }),
-	          React.createElement(Article, { label: 'Bytes out', value: this.props.stream.bytes_out })
+	          React.createElement(Article, { label: 'BW Audio', value: this.props.stream.bw_audio })
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'col-md-6' },
-	          React.createElement(Article, { label: 'BW Audio', value: this.props.stream.bw_audio }),
-	          React.createElement(Article, { label: 'BW Video', value: this.props.stream.bw_video }),
 	          React.createElement(Article, { label: 'N clients', value: this.props.stream.nclients }),
-	          React.createElement(Article, { label: 'Publishing', value: this.props.stream.publishing }),
-	          React.createElement(Article, { label: 'Active', value: this.props.stream.active })
+	          React.createElement(Article, { label: 'Bytes in', value: this.props.stream.bytes_in }),
+	          React.createElement(Article, { label: 'Bytes out', value: this.props.stream.bytes_out }),
+	          React.createElement(Article, { label: 'BW Video', value: this.props.stream.bw_video })
 	        )
 	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'col-md-12 container' },
 	        React.createElement(Chart, { id: 'chart-stream-bits-' + this.props.stream.name }),
-	        React.createElement(Chart, { id: 'chart-stream-bytes-' + this.props.stream.name }),
 	        React.createElement(Chart, { id: 'chart-client-length-' + this.props.stream.name }),
 	        React.createElement(Chart, { id: 'chart-client-flashver-' + this.props.stream.name })
 	      ),
@@ -18578,7 +18663,7 @@
 	module.exports = Stream;
 
 /***/ },
-/* 164 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18597,16 +18682,16 @@
 	module.exports = Chart;
 
 /***/ },
-/* 165 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 
-	var Header = __webpack_require__(160);
-	var Video = __webpack_require__(166);
-	var Audio = __webpack_require__(167);
+	var Header = __webpack_require__(162);
+	var Video = __webpack_require__(168);
+	var Audio = __webpack_require__(169);
 
 	var Meta = React.createClass({
 	  displayName: 'Meta',
@@ -18626,15 +18711,15 @@
 	module.exports = Meta;
 
 /***/ },
-/* 166 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 
-	var Header = __webpack_require__(160);
-	var Article = __webpack_require__(161);
+	var Header = __webpack_require__(162);
+	var Article = __webpack_require__(163);
 
 	var Video = React.createClass({
 	  displayName: 'Video',
@@ -18671,15 +18756,15 @@
 	module.exports = Video;
 
 /***/ },
-/* 167 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 
-	var Header = __webpack_require__(160);
-	var Article = __webpack_require__(161);
+	var Header = __webpack_require__(162);
+	var Article = __webpack_require__(163);
 
 	var Audio = React.createClass({
 	  displayName: 'Audio',
@@ -18710,41 +18795,6 @@
 	});
 
 	module.exports = Audio;
-
-/***/ },
-/* 168 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-
-	var Nav = React.createClass({
-	  displayName: 'Nav',
-
-	  render: function render() {
-	    return React.createElement(
-	      'nav',
-	      { className: 'navbar navbar-default' },
-	      React.createElement(
-	        'div',
-	        { className: 'container-fluid' },
-	        React.createElement(
-	          'div',
-	          { className: 'navbar-header' },
-	          React.createElement(
-	            'a',
-	            { className: 'navbar-brand', href: '/' },
-	            'Nginx RTMP Statistics'
-	          )
-	        )
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = Nav;
 
 /***/ }
 /******/ ]);
