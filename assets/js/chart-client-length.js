@@ -4,17 +4,12 @@
 
   var ChartClientLength = (function () {
 
-    var data = [{
-      key: 'Clients',
-      values: []
-    }];
+    var _context = {};
 
-    var chart;
-
-    var _populate = function (bindto, data) {
+    var _populate = function (bindto) {
       var svg = d3.select(bindto)
-                .datum(data)
-                .call(chart);
+                .datum(_context[bindto].data)
+                .call(_context[bindto].chart);
 
       svg.append("text")
         .attr("x", '50%' )
@@ -26,17 +21,29 @@
     return {
 
       init : function (bindto, timestamp, length) {
-        data[0].values.push({
+        if (!_context[bindto]) {
+          _context[bindto] = {
+            chart: null,
+            data : [
+              {
+                key: 'Clients',
+                values: []
+              }
+            ]
+          }
+        }
+
+        _context[bindto].data[0].values.push({
           x: timestamp,
           y: length
         });
 
-        if (chart) {
-          _populate(bindto, data);
-          chart.update();
+        if (_context[bindto].chart) {
+          _populate(bindto);
+          _context[bindto].chart.update();
         } else {
           nv.addGraph(function() {
-            chart = nv.models.lineChart().options({
+            _context[bindto].chart = nv.models.lineChart().options({
               duration: 0,
               useInteractiveGuideline: true,
               interactive: false,
@@ -45,19 +52,19 @@
               showYAxis: true
             });
 
-            chart.xAxis
+            _context[bindto].chart.xAxis
               .axisLabel('Timestamp')
               .tickFormat(Format.time);
 
-            chart.yAxis
+            _context[bindto].chart.yAxis
               .axisLabel('Clients')
               .tickFormat(d3.format('d'));
 
-            _populate(bindto, data);
+            _populate(bindto);
 
-            nv.utils.windowResize(chart.update);
+            nv.utils.windowResize(_context[bindto].chart.update);
 
-            return chart;
+            return _context[bindto].chart;
           });
         }
       }

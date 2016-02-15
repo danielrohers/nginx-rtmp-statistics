@@ -21,6 +21,10 @@
     return {
 
       init : function (bindto, streams, timestamp, bandwidth, title) {
+        if (!streams[0]) {
+          return;
+        }
+
         if (!_context[bindto]) {
           _context[bindto] = {
             title: title,

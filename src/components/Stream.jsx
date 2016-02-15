@@ -10,10 +10,10 @@ var Stream = React.createClass({
   render : function () {
     if (this.props.stream.time) { this.props.stream.time = Math.floor(this.props.stream.time / 1000); }
     return (
-      <div>
+      <div className="stream row">
         <Header name={'Stream ' + this.props.stream.name } />
 
-        <section className="stream col-md-12">
+        <section className="col-md-12">
           <div className="col-md-6">
             <Article label="Time" value={ Format.time(this.props.stream.time) } />
 

@@ -4,14 +4,12 @@
 
   var ChartClientFlashver = (function () {
 
-    var keys = {};
-
-    var chart;
+    var _context = {};
 
     var _populate = function (bindto, data) {
       var svg = d3.select(bindto)
                   .datum(data)
-                  .call(chart);
+                  .call(_context[bindto].chart);
 
       svg.append("text")
         .attr("x", '50%' )
@@ -23,6 +21,13 @@
     return {
 
       init : function (bindto, timestamp, clients) {
+        if (!_context[bindto]) {
+          _context[bindto] = {
+            keys: {},
+            chart: null
+          };
+        }
+
         var values = {};
         clients.forEach(function (client) {
           var flashver = client.flashver;
@@ -31,29 +36,29 @@
           } else {
             values[flashver] += 1;
           }
-          if (!keys[flashver]) {
-            keys[flashver] = [];
+          if (!_context[bindto].keys[flashver]) {
+            _context[bindto].keys[flashver] = [];
           }
         });
 
         var data = [];
-        for (var key in keys) {
-          keys[key].push({
+        for (var key in _context[bindto].keys) {
+          _context[bindto].keys[key].push({
             x: timestamp,
             y: values[key] || 0
           });
           data.push({
             key: key,
-            values: keys[key]
+            values: _context[bindto].keys[key]
           });
         }
 
-        if (chart) {
+        if (_context[bindto].chart) {
           _populate(bindto, data);
-          chart.update();
+          _context[bindto].chart.update();
         } else {
           nv.addGraph(function() {
-            chart = nv.models.lineChart().options({
+            _context[bindto].chart = nv.models.lineChart().options({
               duration: 0,
               useInteractiveGuideline: true,
               interactive: false,
@@ -62,19 +67,19 @@
               showYAxis: true
             });
 
-            chart.xAxis
+            _context[bindto].chart.xAxis
               .axisLabel('Timestamp')
               .tickFormat(Format.time);
 
-            chart.yAxis
+            _context[bindto].chart.yAxis
               .axisLabel('Flashver')
               .tickFormat(d3.format('d'));
 
             _populate(bindto, data);
 
-            nv.utils.windowResize(chart.update);
+            nv.utils.windowResize(_context[bindto].chart.update);
 
-            return chart;
+            return _context[bindto].chart;
           });
         }
       }

@@ -10,3 +10,7 @@ form input[type="text"] {
 form input[type="number"] {
   width: 10em !important;
 }
+
+.stream {
+  margin-top: 50px;
+}

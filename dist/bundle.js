@@ -18629,11 +18629,11 @@
 	    }
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'stream row' },
 	      React.createElement(Header, { name: 'Stream ' + this.props.stream.name }),
 	      React.createElement(
 	        'section',
-	        { className: 'stream col-md-12' },
+	        { className: 'col-md-12' },
 	        React.createElement(
 	          'div',
 	          { className: 'col-md-6' },
