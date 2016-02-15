@@ -24,13 +24,15 @@ var Form = React.createClass({
 
   handleChartChange : function (rtmp, streamList) {
     ChartRtmpBits.init('#chart-rtmp-bits', rtmp.uptime, rtmp.bw_in, rtmp.bw_out);
+    ChartStreamBits.init('#chart-stream-bits-in-', streamList, rtmp.uptime, 'bw_in', 'Bandwidth Stream In');
+    ChartStreamBits.init('#chart-stream-bits-out-', streamList, rtmp.uptime, 'bw_out', 'Bandwidth Stream Out');
 
     streamList.forEach(function (stream) {
       var streamName = stream.name;
       var timestamp = stream.time;
       var clients = stream.client;
 
-      ChartStreamBits.init('#chart-stream-bits-' + streamName, timestamp, stream.bw_in, stream.bw_out);
+      ChartStreamBitsInOut.init('#chart-stream-bits-in-out-' + streamName, timestamp, stream.bw_in, stream.bw_out);
       ChartClientLength.init('#chart-client-length-' + streamName, timestamp, clients.length);
       ChartClientFlashver.init('#chart-client-flashver-' + streamName, timestamp, clients);
     });

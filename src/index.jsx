@@ -46,6 +46,9 @@ var Application = React.createClass({
 
           <Chart id="chart-rtmp-bits" />
 
+          <Chart id="chart-stream-bits-in-" />
+          <Chart id="chart-stream-bits-out-" />
+
           <div className="col-md-12 container">
             <StreamList streamList={ this.state.streamList } />
           </div>

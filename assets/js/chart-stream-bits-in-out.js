@@ -2,7 +2,7 @@
 
   'use strict';
 
-  var ChartRtmpBits = (function () {
+  var ChartStreamBitsInOut = (function () {
 
     var data = [
       {
@@ -28,7 +28,7 @@
         .attr("x", '50%' )
         .attr("y", 15)
         .style("text-anchor", "middle")
-        .text("Bandwidth RTMP");
+        .text("Bandwidth");
     }
 
     return {
@@ -52,7 +52,7 @@
             });
 
             chart.xAxis
-              .axisLabel('Uptime')
+              .axisLabel('Timestamp')
               .tickFormat(Format.time);
 
             chart.yAxis
@@ -72,6 +72,6 @@
 
   })();
 
-  window.ChartRtmpBits = ChartRtmpBits;
+  window.ChartStreamBitsInOut = ChartStreamBitsInOut;
 
 })(window, document);

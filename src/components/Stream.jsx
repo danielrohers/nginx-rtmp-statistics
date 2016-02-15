@@ -36,7 +36,7 @@ var Stream = React.createClass({
         </section>
 
         <div className="col-md-12 container">
-          <Chart id={'chart-stream-bits-' + this.props.stream.name } />
+          <Chart id={'chart-stream-bits-in-out-' + this.props.stream.name } />
 
           <Chart id={'chart-client-length-' + this.props.stream.name } />
 

@@ -94,6 +94,8 @@
 	          React.createElement(Rtmp, { rtmp: this.state.rtmp })
 	        ),
 	        React.createElement(Chart, { id: 'chart-rtmp-bits' }),
+	        React.createElement(Chart, { id: 'chart-stream-bits-in-' }),
+	        React.createElement(Chart, { id: 'chart-stream-bits-out-' }),
 	        React.createElement(
 	          'div',
 	          { className: 'col-md-12 container' },
@@ -18345,13 +18347,15 @@
 
 	  handleChartChange: function handleChartChange(rtmp, streamList) {
 	    ChartRtmpBits.init('#chart-rtmp-bits', rtmp.uptime, rtmp.bw_in, rtmp.bw_out);
+	    ChartStreamBits.init('#chart-stream-bits-in-', streamList, rtmp.uptime, 'bw_in', 'Bandwidth Stream In');
+	    ChartStreamBits.init('#chart-stream-bits-out-', streamList, rtmp.uptime, 'bw_out', 'Bandwidth Stream Out');
 
 	    streamList.forEach(function (stream) {
 	      var streamName = stream.name;
 	      var timestamp = stream.time;
 	      var clients = stream.client;
 
-	      ChartStreamBits.init('#chart-stream-bits-' + streamName, timestamp, stream.bw_in, stream.bw_out);
+	      ChartStreamBitsInOut.init('#chart-stream-bits-in-out-' + streamName, timestamp, stream.bw_in, stream.bw_out);
 	      ChartClientLength.init('#chart-client-length-' + streamName, timestamp, clients.length);
 	      ChartClientFlashver.init('#chart-client-flashver-' + streamName, timestamp, clients);
 	    });
@@ -18650,7 +18654,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'col-md-12 container' },
-	        React.createElement(Chart, { id: 'chart-stream-bits-' + this.props.stream.name }),
+	        React.createElement(Chart, { id: 'chart-stream-bits-in-out-' + this.props.stream.name }),
 	        React.createElement(Chart, { id: 'chart-client-length-' + this.props.stream.name }),
 	        React.createElement(Chart, { id: 'chart-client-flashver-' + this.props.stream.name })
 	      ),

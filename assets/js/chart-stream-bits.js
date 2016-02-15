@@ -4,45 +4,56 @@
 
   var ChartStreamBits = (function () {
 
-    var data = [
-      {
-        key: 'In',
-        color: '#7777ff',
-        values: []
-      },
-      {
-        key: 'Out',
-        color: '#DE4545',
-        values: []
-      }
-    ];
+    var _context = {};
 
-    var chart;
-
-    var _populate = function (bindto) {
+    var _populate = function (bindto, data) {
       var svg = d3.select(bindto)
                   .datum(data)
-                  .call(chart);
+                  .call(_context[bindto].chart);
 
       svg.append("text")
         .attr("x", '50%' )
         .attr("y", 15)
         .style("text-anchor", "middle")
-        .text("Bandwidth");
+        .text(_context[bindto].title);
     }
 
     return {
 
-      init : function (bindto, timestamp, bw_in, bw_out) {
-        data[0].values.push({ x: timestamp, y: bw_in });
-        data[1].values.push({ x: timestamp, y: bw_out });
+      init : function (bindto, streams, timestamp, bandwidth, title) {
+        if (!_context[bindto]) {
+          _context[bindto] = {
+            title: title,
+            keys: {},
+            chart: null
+          };
+        }
 
-        if (chart) {
-          _populate(bindto);
-          chart.update();
+        streams.forEach(function (stream) {
+          var name = stream.name;
+          if (!_context[bindto].keys[name]) {
+            _context[bindto].keys[name] = [];
+          }
+          _context[bindto].keys[name].push({
+            x: timestamp,
+            y: stream[bandwidth]
+          });
+        });
+
+        var data = [];
+        for (var key in _context[bindto].keys) {
+          data.push({
+            key: key,
+            values: _context[bindto].keys[key]
+          });
+        }
+
+        if (_context[bindto].chart) {
+          _populate(bindto, data);
+          _context[bindto].chart.update();
         } else {
           nv.addGraph(function() {
-            chart = nv.models.lineChart().options({
+            _context[bindto].chart = nv.models.lineChart().options({
               duration: 0,
               useInteractiveGuideline: true,
               interactive: false,
@@ -51,19 +62,19 @@
               showYAxis: true
             });
 
-            chart.xAxis
+            _context[bindto].chart.xAxis
               .axisLabel('Timestamp')
               .tickFormat(Format.time);
 
-            chart.yAxis
+            _context[bindto].chart.yAxis
               .axisLabel('Bandwidth (bits)')
               .tickFormat(d3.format('d'));
 
-            _populate(bindto);
+            _populate(bindto, data);
 
-            nv.utils.windowResize(chart.update);
+            nv.utils.windowResize(_context[bindto].chart.update);
 
-            return chart;
+            return _context[bindto].chart;
           });
         }
       }
